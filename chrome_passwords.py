@@ -62,13 +62,14 @@ def chrome_decrypt(encrypted, safe_storage_key):
     # send any error messages to /dev/null to prevent screen bloating up
     # (any decryption errors will give a non-zero exit, causing exception)
     try:
-        decrypted = subprocess.check_output(
-            "openssl enc -base64 -d "
+        command = ("openssl enc -base64 -d " 
             "-aes-128-cbc -iv '{}' -K {} <<< "
-            "{} 2>/dev/null".format(iv, hex_key, hex_enc_password),
-            shell=True)
+            "{} 2>/dev/null".format(iv, hex_key.decode('utf-8'), hex_enc_password.decode('utf-8')))
+
+        decrypted = subprocess.check_output(command, shell=True)
     except subprocess.CalledProcessError:
         decrypted = "Error decrypting this data"
+        print(command)
 
     return decrypted
 
