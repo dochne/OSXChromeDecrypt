@@ -90,9 +90,9 @@ def chrome_db(chrome_data, content_type):
     """
     # work around for locking DB
     copy_path = tempfile.mkdtemp()
-    with open(chrome_data, 'r') as content:
+    with open(chrome_data, 'rb') as content:
         dbcopy = content.read()
-    with open("{}/chrome".format(copy_path), 'w') as content:
+    with open("{}/chrome".format(copy_path), 'wb') as content:
         # if chrome is open, the DB will be locked
         # so get around this by making a temp copy
         content.write(dbcopy)
@@ -238,5 +238,5 @@ if __name__ == '__main__':
     if not stdout:
         print("User clicked deny.")
 
-    safe_storage_key = stdout.replace("\n", "")
+    safe_storage_key = stdout.replace(b"\n", b"")
     chrome(chrome_data, safe_storage_key)
